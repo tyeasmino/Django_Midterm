@@ -1,0 +1,86 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> EpicRides {% block title %} {% endblock title %} </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  </head>
+  <body>
+    
+    <nav class="navbar navbar-expand-lg bg-body-tertiary"  >
+        <div class="container">
+          <a class="navbar-brand" href="{% url 'home' %}">
+            <img width="60" src=" {% static 'epicrides.png' %} " > 
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link fw-bold" aria-current="page" href=" {% url 'home' %} ">EpicRides</a>
+              </li>
+              {% if request.user.is_authenticated %}
+                {% if request.user.is_superuser %}
+                
+                <li class="nav-item">
+                  <a class="nav-link " aria-current="page" href=" {% url 'addCarBrand' %} ">Add Car Brand</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link " aria-current="page" href=" {% url 'addCarDetails' %} ">Add Car Details</a>
+                </li>
+                {% endif %}
+              {% endif %}  
+            </ul>
+            <div class="d-flex">    
+              {% if request.user.is_authenticated %}
+                <div class=" mx-1 dropdown">
+                    <a class="btn btn-warning dropdown-toggle"  role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ user }}
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href=" {% url 'profile' %} ">Profile</a></li>
+                      <li><a class="dropdown-item" href=" {% url 'edit_profile' %} ">Update Profile</a></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href=" {% url 'update_pass' %} ">Change Password</a></li>
+                    </ul>
+                </div>
+                <form method="post" action=" {% url 'signout' %} ">
+                  {% csrf_token %}
+                <button class="btn btn-danger mx-1" type="submit" ><a class="dropdown-item">Sign out</a></button>
+                </form>
+              {% else %}
+              <button class="btn btn-secondary mx-1"  ><a class="dropdown-item" href=" {% url 'signup' %} ">Sign up</a></button>
+              <button class="btn btn-success mx-1"  ><a class="dropdown-item" href=" {% url 'signin' %} ">Sign in</a></button> 
+              {% endif %}                   
+            </div>
+          </div>
+        </div>
+    </nav>
+
+    {% for i in messages  %}
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong> {{ i }} </strong> 
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+
+    <div class="container">
+      {% block content %}    {% endblock content %}
+    </div>
+
+    <footer class="mt-5">
+      <nav class="navbar bg-body-tertiary">
+        <div class="container">
+          <h6 class="navbar-text w-100 text-center ">
+            All rights reserved to @EpicRides
+          </h6>
+        </div>
+      </nav>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  </body>
+</html>
